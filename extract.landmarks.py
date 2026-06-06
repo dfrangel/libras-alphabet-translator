@@ -3,7 +3,8 @@ import cv2
 import mediapipe as mp
 import csv
 import math
-
+#===========================================================================#
+# DIFERENTES VERSÕES DA FUNÇÃO DE NORMALIZAÇÃO (EXPLICADAS NO README.md)
 def normalize_v1(raw):
     coords = []
     for i in range(0, len(raw), 3):
@@ -91,22 +92,29 @@ def normalize_v2(raw):
         distancias_normalizadas.append(d / maior_distancia)
 
     return distancias_normalizadas
+#===========================================================================#
 
-
-data_dir = Path("data/train") ###ALTERAR PARA DIFERENTES EXTRAÇÕES###
+#===========================================================================#
+data_dir = Path("data/train") # -> "data/train" / "data/test"
+#===========================================================================#
 
 stats = {}
 
 header = []
+#===========================================================================#
 for i in range(1, 25):
-    header.append(f"distancia_{i}") #Agora trata-se a distância do ponto
+    header.append(f"distancia_{i}") # -> alterar para a respectiva lógica
 header.append("label")
+#===========================================================================#
+
 
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(static_image_mode=True, max_num_hands=1)
 
-###ALTERAR PARA DIFERENTES EXTRAÇÕES###
-with open("landmarks_.csv", "w", newline="") as f:
+#===========================================================================#
+with open("landmarks_.csv" # -> "nome final do arquivo.csv"
+#===========================================================================#
+          , "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(header)          # escreve o cabeçalho uma vez
 
@@ -131,8 +139,9 @@ with open("landmarks_.csv", "w", newline="") as f:
                 raw = []
                 for lm in hand_landmarks.landmark:
                     raw.extend([lm.x, lm.y, lm.z])
-                    
-                normalized = normalize_v2(raw) ###ALTERAR PARA DIFERENTES EXTRAÇÕES###
+#===========================================================================#
+                normalized = normalize_v2(raw) # -> escolher versão correta
+#===========================================================================#
                 if normalized is not None:  # proteção caso normalize retorne None
                     row = normalized + [label]
                     writer.writerow(row)
@@ -141,7 +150,8 @@ with open("landmarks_.csv", "w", newline="") as f:
             #Se não encontra não faz nada
             else:
                 stats[label]["falhas"] += 1
-        
+
+#Imprime o panorâma geral de cada letra
 for letra, contagem in stats.items():
     total = contagem["detectadas"] + contagem["falhas"]
     taxa = contagem["falhas"] / total * 100
