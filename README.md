@@ -1,6 +1,6 @@
 # Libras Alphabet Translator
 
-Protótipo de reconhecimento em tempo real das letras estáticas do alfabeto de Libras (Língua Brasileira de Sinais) utilizando visão computacional. O sistema detecta a mão do usuário via webcam, extrai características geométricas dos pontos-chave da mão e classifica o gesto correspondente a uma letra, permitindo soletrar palavras em tempo real.
+Esse projeto é um protótipo de reconhecimento em tempo real das letras estáticas do alfabeto de Libras (Língua Brasileira de Sinais) utilizando visão computacional. O sistema detecta a mão do usuário via webcam, extrai características geométricas dos pontos-chave da mão e classifica o gesto correspondente a uma letra, permitindo digitar na tela em tempo real.
 
 ## Alfabeto suportado
 
@@ -10,13 +10,14 @@ Protótipo de reconhecimento em tempo real das letras estáticas do alfabeto de 
 
 ## Demonstração
 
-O sistema exibe um dashboard com o feed da webcam, a letra detectada com sua confiança e uma caixa de texto onde a palavra vai sendo formada conforme os gestos são confirmados.
+O sistema exibe um dashboard com o feed da webcam, a letra detectada com sua confiança e uma caixa de texto onde a palavra vai sendo formada conforme os gestos são confirmados.                      
+<img width="500" height="305" alt="image" src="https://github.com/user-attachments/assets/6b2e151b-1881-4aed-a7a5-10a3e4a58a78"> 
+<img width="500" height="305" alt="image" src="https://github.com/user-attachments/assets/d0b5289a-c70f-45dd-a537-4553931d8e88" />
+<img width="1302" height="765" alt="image" src="https://github.com/user-attachments/assets/68e675d8-8ea2-4e23-a804-d32f9fe94320" />
 
 ---
 
 ## Versões do modelo
-
-Duas abordagens de extração de features foram desenvolvidas e avaliadas:
 
 ### V1 — Distâncias ao pulso (20 features)
 
@@ -36,31 +37,21 @@ Expande a V1 adicionando as **distâncias entre as pontas de dedos adjacentes**:
 features = [20 distâncias ao pulso] + [dist(p4,p8), dist(p8,p12), dist(p12,p16), dist(p16,p20)]
 ```
 
-Essas 4 distâncias extras capturam o espaçamento entre os dedos — informação crucial para diferenciar letras como R, U e V, cujos pontos ao pulso são muito similares mas cujas pontas de dedos têm separações distintas.
+Essas 4 distâncias extras capturam o espaçamento entre os dedos — informação importante para diferenciar letras como R, U e V, cujos pontos ao pulso são muito similares mas cujas pontas de dedos têm separações distintas.
 
-### Comparação de desempenho
-
-| Modelo | Features | Acurácia (test set) |
-|--------|----------|---------------------|
-| V1 | 20 | ~99.5% |
-| V2 | 24 | ~99.8% |
-
-As matrizes de confusão completas estão disponíveis em `confusion_matrix_v1.png` e `confusion_matrix_v2.png`.
-
----
 
 ## Dataset
 
-**[Libras Dataset — Kaggle](https://www.kaggle.com/datasets/williansoliveira/libras)**
+**[Libras Dataset de williansoliveira — Kaggle](https://www.kaggle.com/datasets/williansoliveira/libras)**
 
-Dataset específico para Libras contendo imagens de mãos fazendo os gestos do alfabeto estático, já dividido em treino e teste.
+Dataset específico para Libras contendo imagens de mãos fazendo os gestos do alfabeto estático, já dividido nos conjuntos de treino e teste.
 
 | Split | Amostras (após extração) |
 |-------|--------------------------|
 | Treino | ~34.000 |
 | Teste | ~11.400 |
 
-O dataset original não contém as letras H, J, K, X e Z por serem gestos com movimento.
+O dataset original não contém as letras H, J, K, X e Z.
 
 ## Instalação e execução
 
@@ -102,26 +93,12 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### Controles
-
-| Tecla | Ação |
-|-------|------|
-| Gesto por ~1seg | Confirma a letra |
-| `BACKSPACE` | Apaga a última letra |
-| `C` | Limpa todo texto |
-| `ESC` | Encerra o programa |
-
----
-
 ## Próximos passos
-
 - [ ] Reconhecimento das letras com movimento (H, J, K, X, Z) via LSTM
 - [ ] Suporte a palavras completas do dicionário de Libras
-- [ ] Interface web com FastAPI + WebSocket
-
 ---
 
 ## Autor
 
-**Davi Frangel**
+**Davi F. Rangel**
 [GitHub](https://github.com/dfrangel)
