@@ -119,45 +119,53 @@ def main():
 
     print("MediaPipe iniciado! Mostre sua mão para a câmera.")
 
+    #Criação da lógica para a caixa de texto
     word = ""
     current_letter = ""
     frame_count = 0
+    #Número de frames para detecção
     CONFIRM_FRAMES = 20
 
+    #Loop principal
     while True:
         sucesso, frame = webcam.read()
         if not sucesso:
             break
 
-        # Inverte o frame horizontalmente para agir como um espelho (opcional, mas recomendado para Libras)
+        #Inverte o frame horizontalmente para agir como um espelho (facilita o uso)
         frame = cv2.flip(frame, 1)
 
-        # O OpenCV captura em formato BGR, mas o MediaPipe trabalha com RGB. 
+        #Converte de BGR para RGB
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
-        # 2. O MediaPipe processa a imagem e procura por mãos
+        #Processa a imagem e procura por mãos
         resultado = maos.process(frame_rgb)
 
         prediction = ""
         confidence = 0.0
 
-        # 3. Se ele encontrar alguma mão, desenha os pontos nela e faz a predição
+        #Se ele encontrar alguma mão
         if resultado.multi_hand_landmarks:
             for pontos_da_mao in resultado.multi_hand_landmarks:
+                #Desenha os pontos na mão
                 mp_desenho.draw_landmarks(frame, pontos_da_mao, mp_maos.HAND_CONNECTIONS)
 
                 raw = []
                 for lm in pontos_da_mao.landmark:
                     raw.extend([lm.x, lm.y, lm.z])
 
-                # Normaliza e prediz
-                normalized = normalize_v2(raw) ###ALTERAR PARA DIFERENTES MODELOS###
+                #Normaliza
+#===========================================================================#
+                normalized = normalize_v2(raw) # -> definir função correta
+#===========================================================================#
                 if normalized is not None:
+                    #Realiza predição e calcula confiança
                     prediction = modelo.predict([normalized])[0]
                     confidence = modelo.predict_proba([normalized]).max()
 
-                    # Lógica de soletração
+                    #Cria tolerância para letras problemáticas
                     threshold = 0.55 if prediction in ["R", "U", "T", "L"] else 0.70
+                    #Se confiança alta, conta o frame
                     if confidence > threshold:
                         if prediction == current_letter:
                             frame_count += 1
@@ -165,6 +173,7 @@ def main():
                             current_letter = prediction
                             frame_count = 0
 
+                        #Se esta confiante a 20 frames, digita
                         if frame_count == CONFIRM_FRAMES:
                             word += current_letter
                             frame_count = 0
