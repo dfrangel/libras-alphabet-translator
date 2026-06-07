@@ -100,19 +100,21 @@ data_dir = Path("data/train") # -> "data/train" / "data/test"
 
 stats = {}
 
+#Cria o cabeçalho do CSV
 header = []
 #===========================================================================#
-for i in range(1, 25):
+for i in range(1, 25):              # -> alterar para a respectiva lógica
     header.append(f"distancia_{i}") # -> alterar para a respectiva lógica
-header.append("label")
+header.append("label")              # -> alterar para a respectiva lógica
 #===========================================================================#
 
-
+#Inicialização do MediaPipe e detecção de mãos
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(static_image_mode=True, max_num_hands=1)
 
+#Abre o arquivo de landmarks
 #===========================================================================#
-with open("landmarks_.csv" # -> "nome final do arquivo.csv"
+with open("landmarks_train_v2.csv" # -> "nome final do arquivo.csv"
 #===========================================================================#
           , "w", newline="") as f:
     writer = csv.writer(f)
@@ -142,7 +144,7 @@ with open("landmarks_.csv" # -> "nome final do arquivo.csv"
 #===========================================================================#
                 normalized = normalize_v2(raw) # -> escolher versão correta
 #===========================================================================#
-                if normalized is not None:  # proteção caso normalize retorne None
+                if normalized is not None:
                     row = normalized + [label]
                     writer.writerow(row)
                 
