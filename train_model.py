@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 #Carregamento dos dados
 #===================================================================================#
-train = pd.read_csv("landmarks_train_v2.csv") # -> renomear para arquivo.csv correto
-test = pd.read_csv("landmarks_test_v2.csv")   # -> renomear para arquivo.csv correto
+train = pd.read_csv("landmarks/landmarks_train_v2.csv") # -> renomear para arquivo.csv correto
+test = pd.read_csv("landmarks/landmarks_test_v2.csv")   # -> renomear para arquivo.csv correto
 #===================================================================================#
 #Impressão para confirmar formatos
 print("Train shape:", train.shape)
